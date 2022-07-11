@@ -19,11 +19,11 @@ const metadataTemplate = {
 
 let tokenUris = [
     "ipfs://QmaVkBn2tKmjbhphU7eyztbvSQU5EXDdqRyXZtRhSGgJGo",
-    "ipfs://QmcNYsLNbtf2FuKmEb293s6Ywt7eQPbfkTwMB1tD6v9Upe",
+    "ipfs://QmYQC5aGZu2PTH8XzbJrbDnvhj3gVs7ya33H9mqUNvST3d",
     "ipfs://QmZYmH5iDbD6v3U2ixoVAjioSzvWJszDzYdbeCLquGSpVm",
 ]
 
-const FUND_AMOUNT = "1000000000000000000000"
+const FUND_AMOUNT = ethers.utils.parseEther("3")
 
 module.exports = async function ({ getNamedAccounts, deployments }) {
     const { deploy, log } = deployments
@@ -44,19 +44,18 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         subscriptionId = txReceipt.events[0].args.subId
         await vrfCoordinatorV2Mock.fundSubscription(subscriptionId, FUND_AMOUNT)
     } else {
-        vrfCoordinatorV2Address = networkConfig[chainId].vrfCoordinatorV2
-        subscriptionId = networkConfig[chainId].subscriptionId
+        vrfCoordinatorV2Address = networkConfig[chainId]["vrfCoordinatorV2"]
+        subscriptionId = networkConfig[chainId]["subscriptionId"]
     }
 
     log("-----------------------------")
-
     const args = [
         vrfCoordinatorV2Address,
         subscriptionId,
-        networkConfig[chainId].gasLane,
-        networkConfig[chainId].callbackGasLimit,
+        networkConfig[chainId]["gasLane"],
+        networkConfig[chainId]["callbackGasLimit"],
         tokenUris,
-        networkConfig[chainId].mintFee,
+        networkConfig[chainId]["mintFee"],
     ]
 
     const randomIpfsNft = await deploy("RandomIpfsNft", {
@@ -68,7 +67,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     log("-----------------------------")
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         log("Verifying...")
-        await verify(randomipfs.address, args)
+        await verify(randomIpfsNft.address, args)
     }
 }
 

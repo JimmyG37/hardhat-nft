@@ -45,19 +45,19 @@ const { developmentChains } = require("../../helper-hardhat-config")
               })
           })
 
-          describe("fulfullRandomWords", () => {
-              it("mints NFT after random number returned", async () => {
+          describe("fulfillRandomWords", () => {
+              it("mints NFT after random number is returned", async function () {
                   await new Promise(async (resolve, reject) => {
                       randomIpfsNft.once("NftMinted", async () => {
                           try {
-                              const tokenUri = await randomIpfsNft.getDogTokenUris("0")
+                              const tokenUri = await randomIpfsNft.tokenURI("0")
                               const tokenCounter = await randomIpfsNft.getTokenCounter()
                               assert.equal(tokenUri.toString().includes("ipfs://"), true)
                               assert.equal(tokenCounter.toString(), "1")
                               resolve()
-                          } catch (error) {
-                              console.log(error)
-                              reject(error)
+                          } catch (e) {
+                              console.log(e)
+                              reject(e)
                           }
                       })
                       try {
@@ -70,10 +70,11 @@ const { developmentChains } = require("../../helper-hardhat-config")
                               requestNftReceipt.events[1].args.requestId,
                               randomIpfsNft.address
                           )
-                      } catch (error) {
-                          console.log(error)
-                          reject(error)
+                      } catch (e) {
+                          console.log(e)
+                          reject(e)
                       }
+                      resolve()
                   })
               })
           })

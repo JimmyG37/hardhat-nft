@@ -21,7 +21,7 @@ module.exports = {
     networks: {
         hardhat: {
             chainId: 31337,
-            // gasPrice: 130000000000,
+            gasPrice: 130000000000,
         },
         rinkeby: {
             url: RINKEBY_RPC_URL,
@@ -33,10 +33,13 @@ module.exports = {
     solidity: {
         compilers: [
             {
-                version: "0.8.8",
+                version: "0.8.7",
             },
             {
                 version: "0.6.6",
+            },
+            {
+                version: "0.8.0",
             },
         ],
     },
